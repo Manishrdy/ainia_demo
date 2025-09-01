@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Whack-a-Mole Challenge</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            text-align: center;
+            background-color: #87CEEB; /* Sky Blue */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+        }
+        h1, h2 {
+            color: #333;
+        }
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            width: 320px;
+            background-color: #966F33; /* Brown Dirt */
+            padding: 20px;
+            border-radius: 10px;
+            border: 5px solid #654321;
+        }
+        .hole {
+            width: 100px;
+            height: 100px;
+            background-color: #006400; /* Dark Green Grass */
+            border-radius: 50%;
+            position: relative;
+            overflow: hidden;
+        }
+        .mole {
+            width: 70%;
+            position: absolute;
+            bottom: -100%; /* Start hidden */
+            left: 15%;
+            font-size: 70px;
+            transition: all 0.2s;
+            cursor: pointer;
+        }
+        .hole.up .mole {
+            bottom: 0; /* Move mole up */
+        }
+        .controls {
+            margin-top: 20px;
+            height: 50px; /* Reserve space for the button */
+        }
+        button {
+            font-size: 20px;
+            padding: 10px 20px;
+            border-radius: 8px;
+            border: none;
+            background-color: #28a745;
+            color: white;
+            cursor: pointer;
+            display: none; /* Hidden by default */
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Whack-a-Mole!</h1>
+    <h2>Score: <span id="score">0</span> | Tries: <span id="tries">0</span> / 5</h2>
+
+    <div class="grid">
+        <div class="hole"><div class="mole">🐹</div></div>
+        <div class="hole"><div class="mole">🐹</div></div>
+        <div class="hole"><div class="mole">🐹</div></div>
+        <div class="hole"><div class="mole">🐹</div></div>
+        <div class="hole"><div class="mole">🐹</div></div>
+        <div class="hole"><div class="mole">🐹</div></div>
+        <div class="hole"><div class="mole">🐹</div></div>
+        <div class="hole"><div class="mole">🐹</div></div>
+        <div class="hole"><div class="mole">🐹</div></div>
+    </div>
+
+    <div class="controls">
+        <button id="done-button" onclick="location.href='/complete_task?activity=whack-a-mole-game'">Great Job!</button>
+    </div>
+
+<script>
+    const holes = document.querySelectorAll('.hole');
+    const moles = document.querySelectorAll('.mole');
+    const scoreDisplay = document.getElementById('score');
+    const triesDisplay = document.getElementById('tries');
+    const doneButton = document.getElementById('done-button');
+    
+    let lastHole;
+    let score = 0;
+    let tries = 0;
+    const totalTries = 5;
+    let gameActive = true;
+
+    function randomTime(min, max) {
+        return Math.round(Math.random() * (max - min) + min);
+    }
+
+    function randomHole(holes) {
+        const idx = Math.floor(Math.random() * holes.length);
+        const hole = holes[idx];
+        if (hole === lastHole) {
+            return randomHole(holes);
+        }
+        lastHole = hole;
+        return hole;
+    }
+
+    function peep() {
+        if (tries >= totalTries) {
+            endGame();
+            return;
+        }
+
+        tries++;
+        triesDisplay.textContent = tries;
+        const timeUp = randomTime(400, 800); // How long the mole stays visible
+        const hole = randomHole(holes);
+        hole.classList.add('up');
+        
+        setTimeout(() => {
+            hole.classList.remove('up');
+            
+            // *** THIS IS THE NEW DELAY LOGIC ***
+            if (gameActive) {
+                // Wait 1 to 1.5 seconds before the next mole appears
+                const delay = randomTime(1000, 1500);
+                setTimeout(peep, delay);
+            }
+        }, timeUp);
+    }
+
+    function whack(e) {
+        if (!e.isTrusted || !gameActive) return; 
+        
+        score++;
+        scoreDisplay.textContent = score;
+        this.parentNode.classList.remove('up'); // Hide mole on whack
+    }
+    
+    function endGame() {
+        gameActive = false;
+        document.querySelector('h2').textContent = `Game Over! Final Score: ${score} / ${totalTries}`;
+        doneButton.style.display = 'block';
+    }
+
+    moles.forEach(mole => mole.addEventListener('click', whack));
+
+    // Start the game!
+    peep();
+</script>
+
+</body>
+</html>

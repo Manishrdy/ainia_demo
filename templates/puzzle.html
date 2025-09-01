@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Memory Puzzle</title>
+    <style>
+        body { font-family: sans-serif; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; background-color: #f0f8ff; }
+        .grid { display: grid; grid-template-columns: repeat(4, 100px); gap: 10px; }
+        .card { width: 100px; height: 100px; background-color: #007bff; border-radius: 8px; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 40px; transform-style: preserve-3d; transition: transform 0.5s; }
+        .card.flip { transform: rotateY(180deg); }
+        .card .front, .card .back { position: absolute; backface-visibility: hidden; }
+        .card .back { transform: rotateY(180deg); }
+        .controls { margin-top: 20px; text-align: center; }
+        a { text-decoration: none; font-size: 18px; color: #333; }
+        button { font-size: 20px; padding: 10px 20px; border-radius: 8px; border: none; background-color: #28a745; color: white; cursor: pointer; display: none; }
+    </style>
+</head>
+<body>
+    <h2>Memory Puzzle</h2>
+    <div class="grid" id="puzzle-grid"></div>
+    <div class="controls">
+        <a href="/child">View More Activities</a>
+        <button id="done-button" onclick="location.href='/complete_task?activity=puzzle'">I'm Done!</button>
+    </div>
+
+<script>
+    const grid = document.getElementById('puzzle-grid');
+    const doneButton = document.getElementById('done-button');
+    const emojis = ['🍎', '🍎', '🍌', '🍌', '🍇', '🍇', '🍊', '🍊'];
+    let flippedCards = [];
+    let matchedPairs = 0;
+
+    // Shuffle emojis
+    emojis.sort(() => 0.5 - Math.random());
+
+    // Create cards
+    emojis.forEach(emoji => {
+        const card = document.createElement('div');
+        card.classList.add('card');
+        card.dataset.emoji = emoji;
+        card.innerHTML = `<div class="front"></div><div class="back">${emoji}</div>`;
+        card.addEventListener('click', flipCard);
+        grid.appendChild(card);
+    });
+
+    function flipCard() {
+        if (flippedCards.length < 2 && !this.classList.contains('flip')) {
+            this.classList.add('flip');
+            flippedCards.push(this);
+
+            if (flippedCards.length === 2) {
+                setTimeout(checkForMatch, 1000);
+            }
+        }
+    }
+
+    function checkForMatch() {
+        const [card1, card2] = flippedCards;
+        if (card1.dataset.emoji === card2.dataset.emoji) {
+            card1.removeEventListener('click', flipCard);
+            card2.removeEventListener('click', flipCard);
+            matchedPairs++;
+            if (matchedPairs === emojis.length / 2) {
+                doneButton.style.display = 'block';
+            }
+        } else {
+            card1.classList.remove('flip');
+            card2.classList.remove('flip');
+        }
+        flippedCards = [];
+    }
+</script>
+</body>
+</html>

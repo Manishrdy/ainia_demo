@@ -1,0 +1,2 @@
+id,name,email,password_hash,parent_choice,last_accessed
+f00ac44a-f2b1-4b3b-8719-e7e03190c21f,parent01,manishbotta12@gmail.com,scrypt:32768:8:1$s4lNT0CRkhSNDIv7$fb5d11966e7e0dbceb648ece94897f14486fa8827c877923fc4032f95c0c01cdb48ac6f2cbe673024462300ae119ca53893f8de94a8aeb3c5e38cd15ece0fe2a,,2025-08-31T16:39:03.219650

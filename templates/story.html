@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Interactive Story</title>
+    <style>
+        body {
+            font-family: 'Comic Sans MS', sans-serif;
+            text-align: center;
+            background-color: #fdf5e6;
+            padding: 20px;
+        }
+
+        .story-container {
+            max-width: 600px;
+            margin: auto;
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .story-text {
+            font-size: 22px;
+            line-height: 1.6;
+            text-align: left;
+        }
+
+        .sound-word {
+            color: #007bff;
+            font-weight: bold;
+            cursor: pointer;
+            text-decoration: underline;
+        }
+
+        .controls,
+        .nav-controls {
+            margin-top: 30px;
+        }
+
+        button {
+            font-size: 20px;
+            padding: 10px 20px;
+            border-radius: 8px;
+            border: none;
+            background-color: #28a745;
+            color: white;
+            cursor: pointer;
+            margin: 5px;
+        }
+
+        #done-button {
+            display: none;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="story-container">
+        <h1>Leo's Magical Adventure</h1>
+        <div id="story-part-1" class="story-text">
+            Once upon a time, a friendly lion named Leo found a strange, glowing map. The map showed a path through a
+            whispering jungle. Suddenly, Leo heard a loud <span class="sound-word" data-sound="roar">ROAR</span> in the
+            distance! He knew his adventure had begun.
+        </div>
+        <div id="story-part-2" class="story-text" style="display:none;">
+            Following the map, Leo arrived at a sparkling cave. Inside, a chest sat on a pedestal. As he opened it, a
+            beautiful <span class="sound-word" data-sound="magic">CHIME</span> filled the air. He had found the magical
+            treasure!
+        </div>
+
+        <div class="nav-controls">
+            <button id="next-button">Next Page</button>
+            <button id="done-button" onclick="location.href='/complete_task?activity=story'">The End!</button>
+        </div>
+    </div>
+
+    <div class="controls">
+        <button id="read-aloud-button">🔊 Read to Me</button>
+        <a href="/child" style="font-size: 16px;">View More Activities</a>
+    </div>
+
+    <script>
+        const soundWords = document.querySelectorAll('.sound-word');
+        const readAloudButton = document.getElementById('read-aloud-button');
+        const nextButton = document.getElementById('next-button');
+        const doneButton = document.getElementById('done-button');
+        const storyPart1 = document.getElementById('story-part-1');
+        const storyPart2 = document.getElementById('story-part-2');
+
+        // --- Sound Effect Logic ---
+        soundWords.forEach(word => {
+            word.addEventListener('click', () => {
+                const soundName = word.dataset.sound;
+                // IMPORTANT: The path must be correct!
+                const sound = new Audio(`/static/sounds/${soundName}.mp3`);
+                sound.play();
+            });
+        });
+
+        // --- Text-to-Speech Logic ---
+        readAloudButton.addEventListener('click', () => {
+            // Determine which part of the story is visible
+            const textToRead = storyPart1.style.display !== 'none' ? storyPart1.textContent : storyPart2.textContent;
+            const utterance = new SpeechSynthesisUtterance(textToRead);
+            utterance.rate = 0.9; // Make the voice a little slower for kids
+            window.speechSynthesis.speak(utterance);
+        });
+
+        // --- Story Progression Logic ---
+        nextButton.addEventListener('click', () => {
+            storyPart1.style.display = 'none';
+            storyPart2.style.display = 'block';
+            nextButton.style.display = 'none'; // Hide the 'Next' button
+            doneButton.style.display = 'inline-block'; // Show the 'The End!' button
+        });
+    </script>
+
+</body>
+
+</html>

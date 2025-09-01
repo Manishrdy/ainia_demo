@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Welcome</title>
+    <style> 
+        body { text-align: center; font-family: sans-serif; padding-top: 50px; } 
+        a.button { 
+            font-size: 24px; 
+            margin: 20px; 
+            padding: 15px 30px;
+            text-decoration: none;
+            color: white;
+            background-color: #007bff;
+            border-radius: 8px;
+        }
+        a.logout {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            font-size: 16px;
+        }
+    </style>
+</head>
+<body>
+
+    {% with messages = get_flashed_messages() %}
+      {% if messages %}
+        <div style="background-color: #d4edda; color: #155724; padding: 10px; margin-bottom: 20px; border-radius: 5px;">
+            {{ messages[0] }}
+        </div>
+      {% endif %}
+    {% endwith %}
+
+    <a href="/logout" class="logout">Logout</a>
+
+    <h1>Welcome, {{ user_name }}!</h1>
+    
+    <h2>Who is playing now?</h2>
+
+    <div>
+        <a href="/parent" class="button">🧭 I'm a Parent</a>
+        <a href="/child" class="button">👧 I'm a Child</a>
+    </div>
+
+</body>
+</html>

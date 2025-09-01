@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Choose Your Adventure</title>
+    <style> 
+        body { text-align: center; font-family: sans-serif; padding-top: 50px; } 
+        h1 { margin-bottom: 40px; }
+        a.button { 
+            display: block;
+            width: 200px;
+            margin: 20px auto; 
+            padding: 20px;
+            font-size: 24px; 
+            text-decoration: none;
+            color: white;
+            border-radius: 8px;
+        }
+        .game { background-color: #28a745; }
+        .story { background-color: #007bff; }
+        .puzzle { background-color: #ffc107; color: black; }
+        .disabled { background-color: #6c757d; cursor: not-allowed; }
+        a.back { font-size: 16px; }
+    </style>
+</head>
+<body>
+    <h1>Choose Your Adventure!</h1>
+
+    <div>
+        <a href="/story" class="button story">📖 Story</a>
+        <a href="/puzzle" class="button puzzle">🧩 Puzzle</a>
+        <a href="/game" class="button game">🎮 Game</a>
+    </div>
+
+    <br>
+    <a href="/" class="back">Back to Home</a>
+</body>
+</html>
